@@ -6,9 +6,9 @@ internal class Author
     public string Vezeteknev { get; private set; }
     public Guid AuthorId { get; private set; }
 
-    public Author(string fullName)
+    public Author(string teljesnev)
     {
-        var nevek = fullName.Split(' ');
+        var nevek = teljesnev.Split(' ');
 
         if (nevek[0].Length < 3 || nevek[0].Length > 32 || nevek[1].Length < 3 || nevek[1].Length > 32)
         {

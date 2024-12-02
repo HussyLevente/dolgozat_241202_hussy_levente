@@ -25,14 +25,14 @@ internal class Book
             }
         }
     }
-    public List<Author> Authors
+    public List<Author> Szerzok
     {
         get => authors;
         
         private set
         {
             authors = value;
-            if (Authors.Count < 1 || Authors.Count > 3)
+            if (Szerzok.Count < 1 || Szerzok.Count > 3)
             {
                 throw new Exception("A listában minimum 1 és maximum 3 elem tartozhat");
             }
@@ -104,10 +104,18 @@ internal class Book
         }
     }
 
-    public Book(long isbn, List<Author> authors, string cim, int kiadasEve, string nyelv, int keszlet, int ar)
+    public void szerzohozzaadas(params string[] szerzo)
+    {
+        foreach (var szerzok in szerzo)
+        {
+            authors.Add(new(szerzok));
+        }
+    }
+
+    public Book(long isbn, List<Author> szerzok, string cim, int kiadasEve, string nyelv, int keszlet, int ar)
     {
         ISBN = isbn;
-        Authors = authors;
+        Szerzok = szerzok;
         Cim = cim;
         KiadasEve = kiadasEve;
         Nyelv = nyelv;
@@ -115,10 +123,10 @@ internal class Book
         Ar = ar;
     }
 
-    public Book(string cim, string authorName)
+    public Book(string cim, string szerzoNeve)
     {
         ISBN = GenerateRandomISBN();
-        Authors = new List<Author> { new Author(authorName) };
+        Szerzok = new List<Author> { new Author(szerzoNeve) };
         Cim = cim;
         KiadasEve = 2024;
         Nyelv = "magyar";
@@ -129,9 +137,9 @@ internal class Book
 
     public override string ToString()
     {
-        string authorLabel = Authors.Count == 1 ? "szerző:" : "szerzők:";
-        string stockStatus = Keszlet == 0 ? "beszerzés alatt" : $"{Keszlet} db";
-        return $"{Cim} - {authorLabel} {string.Join(", ", Authors.Select(a => a.Keresztnev + " " + a.Vezeteknev))}, Készlet: {stockStatus}, Ár: {Ar} Ft";
+        string szerzolista = Szerzok.Count == 1 ? "szerző:" : "szerzők:";
+        string beszerzes = Keszlet == 0 ? "beszerzés alatt" : $"{Keszlet} db";
+        return $"{Cim} - {szerzolista} {string.Join(", ", Szerzok.Select(a => a.Keresztnev + " " + a.Vezeteknev))}, Készlet: {beszerzes}, Ár: {Ar} Ft";
     }
 
     public long GenerateRandomISBN()
@@ -149,12 +157,14 @@ internal class Book
     public void csokkeno()
     {
         if (Keszlet > 0)
+        {
             Keszlet--;
+        }
     }
 
-    public void novelo(int amount)
+    public void novelo(int darab)
     {
-        Keszlet += amount;
+        Keszlet += darab;
     }
 
     public bool hiany()
